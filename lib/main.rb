@@ -1,4 +1,4 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'slim'
 require 'sass'
 require 'ostruct'
@@ -8,6 +8,12 @@ Slim::Engine.set_default_options :pretty => true
 class Blog < Sinatra::Base
   set :root, File.expand_path('../../', __FILE__)
   set :articles, []
+  helpers do 
+    def six(number)
+      self.take(number)
+      yield
+    end
+  end
 
   Dir.glob "#{root}/articles/*.article.txt" do |file|
 
@@ -23,8 +29,7 @@ class Blog < Sinatra::Base
 
     articles << article 
   end  
-
-
+    
   get '/' do 
     slim :index
   end
@@ -33,4 +38,5 @@ class Blog < Sinatra::Base
     sass :stylesheet 
   end
 end
+
 
